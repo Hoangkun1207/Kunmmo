@@ -28,57 +28,53 @@ body::after {
     pointer-events: none;
 }
 
-/* MÀN HÌNH LOADING KIỂU PIXEL BAR */
+/* MÀN HÌNH LOADING BẰNG ẢNH BỐI CẢNH */
 #loading-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: var(--pixel-black);
+    /* THAY LINK ẢNH CỦA BẠN VÀO ĐÂY */
+    background-image: url('link-anh-pixel-cua-ban.png'); 
+    background-size: cover;
+    background-position: center;
+    image-rendering: pixelated; /* Giữ cho ảnh nền sắc nét */
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* Đặt chữ ở giữa màn hình */
     z-index: 9999;
+    transition: opacity 1s ease; /* Hiệu ứng mờ đi khi load xong */
 }
 
-/* Thanh nạp năng lượng kiểu Pixel */
-.pixel-loader {
-    width: 200px;
-    height: 30px;
-    border: 4px solid var(--pixel-green);
+/* Lớp phủ làm tối ảnh nền một chút để chữ dễ đọc hơn */
+.loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Độ tối 50% */
+    z-index: 1;
+}
+
+/* Hiệu ứng chữ từ từ hiện lên */
+.loading-text-fade {
     position: relative;
-    padding: 4px;
+    z-index: 2; /* Nổi lên trên lớp phủ */
+    font-size: 2.5rem;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-shadow: 3px 3px 0px #000; /* Viền đen cho chữ */
+    opacity: 0; /* Ẩn lúc ban đầu */
+    animation: textFadeIn 2s ease forwards, pulse 1.5s infinite alternate 2s; 
+    /* Hiện lên trong 2s, sau đó nhấp nháy nhẹ */
 }
 
-.pixel-loader::before {
-    content: "";
-    display: block;
-    height: 100%;
-    background-color: var(--pixel-green);
-    width: 0%;
-    animation: pixel-load 2s steps(10) forwards; /* Chạy theo từng nấc kiểu 8-bit */
+@keyframes textFadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pixel-load {
-    to { width: 100%; }
-}
-
-.loading-text {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    /* Hiệu ứng gõ chữ */
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 10px solid var(--pixel-green);
-    width: 0;
-    animation: typing 1.5s steps(15) infinite alternate;
-}
-
-@keyframes typing {
-    from { width: 0; }
-    to { width: 230px; }
+@keyframes pulse {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 
 /* TRANG GIỚI THIỆU CHÍNH */
