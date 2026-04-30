@@ -41,8 +41,8 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             
-            /* Link ảnh mới của bạn */
-            background-image: url('https://img.itch.zone/aW1nLzIwMTQwMzA5LnBuZw==/original/8akAhD.png'); 
+            /* LINK ẢNH MỚI CỦA BẠN NẰM Ở ĐÂY: */
+            background-image: url('https://img.itch.zone/aW1nLzEzNzc2MTcxLnBuZw==/original/RzWuJa.png'); 
             
             /* Phủ kín màn hình, luôn giữ tâm ảnh ở giữa */
             background-size: cover;
@@ -66,15 +66,15 @@
             justify-content: center;
             align-items: center;
             z-index: 50;
-            background-color: rgba(0, 0, 0, 0.6); /* Tối nền để chữ dễ đọc */
+            background-color: rgba(0, 0, 0, 0.6); 
             transition: opacity 1s ease, visibility 1s;
         }
 
         .loading-box {
             border: 4px solid #fff;
             padding: 4px;
-            width: 300px; /* Độ rộng gốc trên PC */
-            max-width: 80%; /* Không bao giờ vượt quá 80% màn hình đt */
+            width: 300px; 
+            max-width: 80%; 
             background: #000;
             box-shadow: 4px 4px 0 var(--kun-shadow);
         }
@@ -136,7 +136,7 @@
                 inset 0 0 20px rgba(241, 196, 15, 0.2);
             animation: floating 3s ease-in-out infinite;
             width: 80%;
-            max-width: 500px; /* Giới hạn độ to trên PC */
+            max-width: 500px; 
         }
 
         @keyframes floating {
@@ -187,7 +187,7 @@
         }
 
         .blur-bg {
-            filter: blur(5px) brightness(0.5); /* Tăng độ mờ nền để chữ rõ hơn */
+            filter: blur(5px) brightness(0.5); 
         }
 
         /* --- TỐI ƯU HÓA CHO ĐIỆN THOẠI (MOBILE RESPONSIVE) --- */
@@ -197,7 +197,7 @@
                 width: 85%;
             }
             .pixel-title {
-                font-size: 2.2rem; /* Chữ nhỏ lại trên đt */
+                font-size: 2.2rem; 
                 text-shadow: 
                     3px 3px 0 var(--kun-green),
                     6px 6px 0 var(--kun-shadow);
@@ -227,14 +227,14 @@
         <div class="loading-box">
             <div class="loading-bar"></div>
         </div>
-        <p class="loading-text">LOADING DUNGEON<span class="blink">...</span></p>
+        <p class="loading-text">LOADING THE WORLD<span class="blink">...</span></p>
     </div>
 
     <!-- Trang Menu Chính -->
     <div id="main-content">
         <div class="menu-board">
             <h1 class="pixel-title">KUN<br>MASTER</h1>
-            <p class="pixel-subtitle">- THE DUNGEON AWAKENING -</p>
+            <p class="pixel-subtitle">- NEW ADVENTURE -</p>
             <button class="btn-start" onclick="alert('Đang kết nối vào máy chủ...')">PRESS START</button>
         </div>
     </div>
