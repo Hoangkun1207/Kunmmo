@@ -3,32 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Game - Loading...</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Pixel Kun Master</title>
+    <style>
+        /* === PHẦN CSS GỘP CHUNG === */
+        :root {
+            --pixel-green: #00ff41; 
+            --pixel-black: #000000;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--pixel-black);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; /* Không cho cuộn khi đang tải */
+            image-rendering: pixelated; /* Giữ độ sắc nét cho Pixel Art */
+        }
+
+        /* --- 1. MÀN HÌNH LOADING TRƯỚC KHI VÀO GAME --- */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* BẠN DÁN LINK ẢNH NỀN HOẶC TÊN FILE ẢNH VÀO DÒNG DƯỚI NÀY NHÉ: */
+            background-image: url('mG4zBn.png'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease; /* Hiệu ứng mờ dần khi chuyển cảnh */
+        }
+
+        /* Lớp mờ để làm nổi bật chữ */
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6); 
+            z-index: 1;
+        }
+
+        /* Chữ tải game hiện dần lên */
+        .loading-text-fade {
+            position: relative;
+            z-index: 2;
+            font-size: 2.5rem;
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 0px #000; 
+            opacity: 0; 
+            animation: textFadeIn 2s ease forwards, pulse 1.5s infinite alternate 2s; 
+        }
+
+        @keyframes textFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; text-shadow: 4px 4px 0px #000, 0 0 20px var(--pixel-green); }
+            100% { opacity: 0.5; text-shadow: 4px 4px 0px #000; }
+        }
+
+        /* --- 2. TRANG CHÍNH CỦA GAME (ẨN LÚC ĐẦU) --- */
+        #main-content {
+            display: none; /* Ẩn đi để nhường chỗ cho màn hình loading */
+            opacity: 0;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1s ease;
+        }
+
+        #main-content.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Tiêu đề Pixel Kun Master */
+        .pixel-title {
+            font-size: 4.5rem;
+            color: var(--pixel-green);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 4px 4px 0px #005500, 8px 8px 0px #002200; /* Đổ bóng khối 3D */
+            margin-bottom: 15px;
+        }
+
+        .pixel-subtitle {
+            font-size: 1.2rem;
+            color: #fff;
+            background: #005500;
+            padding: 8px 20px;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+            border: 2px solid var(--pixel-green);
+        }
+
+        /* Nút Bắt đầu */
+        .btn-start {
+            background: var(--pixel-green);
+            color: var(--pixel-black);
+            border: none;
+            padding: 15px 40px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 #005500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn-start:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #005500;
+        }
+
+        .btn-start:active {
+            transform: translate(4px, 4px);
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body>
 
-   <!-- Màn hình Loading với ảnh nền -->
-<div id="loading-screen">
-    <div class="loading-overlay"></div>
-    <p class="loading-text-fade">ĐANG TẢI THẾ GIỚI KUN MASTER...</p>
-</div>
-
-    <!-- Nội dung trang Giới thiệu (Ẩn lúc đầu) -->
-    <div id="main-content" class="hidden">
-        <nav>
-            <h1 class="logo">KUN GAME</h1>
-        </nav>
-        
-<section class="hero">
-    <div class="hero-content">
-        <!-- Tên thương hiệu mới của bạn -->
-        <h1 class="pixel-title">PIXEL KUN MASTER</h1>
-        <p class="pixel-subtitle">CHÀO MỪNG ĐẾN VỚI THẾ GIỚI PIXEL</p>
-        <button class="btn-start">BẮT ĐẦU NGAY</button>
+    <!-- Màn hình Loading bằng ảnh bối cảnh -->
+    <div id="loading-screen">
+        <div class="loading-overlay"></div>
+        <p class="loading-text-fade">ĐANG TẢI THẾ GIỚI KUN MASTER...</p>
     </div>
-</section>
 
-    <script src="script.js"></script>
+    <!-- Trang giới thiệu chính -->
+    <div id="main-content">
+        <h1 class="pixel-title">PIXEL KUN MASTER</h1>
+        <p class="pixel-subtitle">CHUYẾN PHIÊU LƯU 8-BIT BẮT ĐẦU</p>
+        <button class="btn-start" onclick="alert('Tính năng đang phát triển!')">BẮT ĐẦU NGAY</button>
+    </div>
+
+    <!-- === PHẦN JAVASCRIPT GỘP CHUNG === -->
+    <script>
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+
+            // Thời gian chờ để người chơi ngắm ảnh nền loading (3000 = 3 giây)
+            setTimeout(() => {
+                // Làm mờ dần màn hình loading
+                loadingScreen.style.opacity = '0';
+                
+                // Đợi làm mờ xong (khoảng 1 giây) thì ẩn hẳn đi và hiện trang chính
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    mainContent.classList.add('visible');
+                    document.body.style.overflow = 'auto'; // Cho phép cuộn trang trở lại
+                }, 1000); 
+
+            }, 3000); 
+        });
+    </script>
 </body>
 </html>
