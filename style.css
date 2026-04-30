@@ -1,80 +1,90 @@
-/* style.css */
+/* style.css - 8-BIT PIXEL STYLE */
 :root {
-    --primary-color: #00ffcc; /* Màu Cyan Neon */
-    --secondary-color: #ff00ff; /* Màu Hồng Neon */
-    --bg-color: #050505;
+    --pixel-green: #00ff41; /* Màu xanh màn hình máy tính cũ */
+    --pixel-black: #000000;
+    --pixel-size: 8px;
 }
 
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-color);
-    color: #fff;
+    background-color: var(--pixel-black);
+    color: var(--pixel-green);
     font-family: 'Courier New', Courier, monospace;
-    overflow-x: hidden;
-    height: 100vh;
+    overflow: hidden;
+    /* Giữ cho mọi hình ảnh và cạnh sắc nét, không bị mờ */
+    image-rendering: pixelated;
 }
 
-/* Hiệu ứng đường kẻ Tivi cũ (Scanlines) */
-body::before {
+/* HIỆU ỨNG MÀN HÌNH CRT CỔ ĐIỂN */
+body::after {
     content: " ";
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 100;
-    background-size: 100% 4px, 3px 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 10000;
     pointer-events: none;
 }
 
-/* Màn hình Loading */
+/* MÀN HÌNH LOADING KIỂU PIXEL BAR */
 #loading-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: #000;
+    background: var(--pixel-black);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity 0.8s ease;
 }
 
+/* Thanh nạp năng lượng kiểu Pixel */
 .pixel-loader {
-    width: 60px;
-    height: 60px;
-    border: 4px solid var(--primary-color);
-    box-shadow: 0 0 15px var(--primary-color), inset 0 0 15px var(--primary-color);
-    animation: pixel-spin 1.5s infinite steps(8);
+    width: 200px;
+    height: 30px;
+    border: 4px solid var(--pixel-green);
+    position: relative;
+    padding: 4px;
 }
 
-@keyframes pixel-spin {
-    0% { transform: rotate(0deg); border-color: var(--primary-color); }
-    50% { border-color: var(--secondary-color); box-shadow: 0 0 20px var(--secondary-color); }
-    100% { transform: rotate(360deg); }
+.pixel-loader::before {
+    content: "";
+    display: block;
+    height: 100%;
+    background-color: var(--pixel-green);
+    width: 0%;
+    animation: pixel-load 2s steps(10) forwards; /* Chạy theo từng nấc kiểu 8-bit */
+}
+
+@keyframes pixel-load {
+    to { width: 100%; }
 }
 
 .loading-text {
-    margin-top: 30px;
-    font-weight: bold;
-    letter-spacing: 4px;
-    color: var(--primary-color);
-    text-shadow: 2px 2px var(--secondary-color);
-    animation: blink 0.5s infinite;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    /* Hiệu ứng gõ chữ */
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 10px solid var(--pixel-green);
+    width: 0;
+    animation: typing 1.5s steps(15) infinite alternate;
 }
 
-@keyframes blink {
-    50% { opacity: 0; }
+@keyframes typing {
+    from { width: 0; }
+    to { width: 230px; }
 }
 
-/* Nội dung chính */
+/* TRANG GIỚI THIỆU CHÍNH */
 #main-content {
-    display: none; /* Sẽ hiện bằng JS */
-    opacity: 0;
+    display: none;
     height: 100vh;
-    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -83,48 +93,36 @@ body::before {
 
 .visible {
     display: flex !important;
-    animation: fadeIn 1s forwards;
 }
 
-@keyframes fadeIn {
-    to { opacity: 1; }
-}
-
-/* Hiệu ứng Glitch cho Tiêu đề */
+/* Tiêu đề kiểu Blocky */
 .glitch {
-    font-size: 4rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    position: relative;
-    text-shadow: 0.05em 0 0 var(--secondary-color), -0.05em -0.025em 0 var(--primary-color);
-    animation: glitch 1s infinite;
+    font-size: 3.5rem;
+    color: var(--pixel-green);
+    text-shadow: 4px 4px var(--pixel-black), 8px 8px #005500;
+    margin-bottom: 20px;
 }
 
-@keyframes glitch {
-    0% { text-shadow: 2px 0 0 var(--secondary-color), -2px 0 0 var(--primary-color); }
-    25% { text-shadow: -2px 0 0 var(--secondary-color), 2px 0 0 var(--primary-color); }
-    50% { text-shadow: 2px -2px 0 var(--secondary-color), -2px 2px 0 var(--primary-color); }
-    100% { text-shadow: -2px 0 0 var(--secondary-color), 2px 0 0 var(--primary-color); }
-}
-
-/* Nút Bắt đầu */
+/* Nút Bắt đầu kiểu 8-bit */
 .btn-start {
-    margin-top: 40px;
-    padding: 20px 50px;
-    font-size: 1.5rem;
-    background: transparent;
-    color: var(--primary-color);
-    border: 3px solid var(--primary-color);
+    background: var(--pixel-green);
+    color: var(--pixel-black);
+    border: none;
+    padding: 15px 30px;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1.2rem;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: 0.3s;
-    box-shadow: 0 0 10px var(--primary-color);
+    box-shadow: 6px 6px 0 #005500; /* Đổ bóng khối vuông */
+    transition: transform 0.1s;
 }
 
 .btn-start:hover {
-    background: var(--primary-color);
-    color: #000;
-    box-shadow: 0 0 40px var(--primary-color);
-    transform: scale(1.1);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #005500;
+}
+
+.btn-start:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
 }
