@@ -3,167 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Kun Master</title>
+    <title>Pixel Kun Master - The Awakening</title>
+    
+    <!-- Nhúng Font Pixel chuẩn từ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <style>
-        /* === PHẦN CSS GỘP CHUNG === */
+        /* === TÀI NGUYÊN MÀU SẮC & BIẾN === */
         :root {
-            --pixel-green: #00ff41; 
-            --pixel-black: #000000;
+            --kun-green: #2ecc71; /* Xanh lá game RPG */
+            --kun-dark: #1a1a1a;
+            --kun-gold: #f1c40f;
+            --kun-shadow: #000000;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--pixel-black);
+            background-color: var(--kun-dark);
             color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden; /* Không cho cuộn khi đang tải */
-            image-rendering: pixelated; /* Giữ độ sắc nét cho Pixel Art */
+            font-family: 'Press Start 2P', cursive; /* Ép toàn bộ dùng font Pixel */
+            overflow: hidden; 
+            image-rendering: pixelated; 
         }
 
-        /* --- 1. MÀN HÌNH LOADING TRƯỚC KHI VÀO GAME --- */
-        #loading-screen {
+        /* Hiệu ứng màn hình Tivi CRT sọc ngang */
+        .scanlines {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            /* BẠN DÁN LINK ẢNH NỀN HOẶC TÊN FILE ẢNH VÀO DÒNG DƯỚI NÀY NHÉ: */
-            background-image: url('mG4zBn.png'); 
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none; /* Không cản trở click chuột */
+        }
+
+        /* Hình nền dùng chung cho cả trang */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://img.itch.zone/aW1nLzIwMDY3NTc3LnBuZw==/original/mG4zBn.png'); 
             background-size: cover;
             background-position: center;
+            z-index: -1;
+            transition: filter 1.5s ease;
+        }
+
+        /* --- 1. MÀN HÌNH LOADING --- */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1s ease; /* Hiệu ứng mờ dần khi chuyển cảnh */
-        }
-
-        /* Lớp mờ để làm nổi bật chữ */
-        .loading-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); 
-            z-index: 1;
-        }
-
-        /* Chữ tải game hiện dần lên */
-        .loading-text-fade {
-            position: relative;
-            z-index: 2;
-            font-size: 2.5rem;
-            color: #fff;
-            font-weight: bold;
-            letter-spacing: 4px;
-            text-shadow: 4px 4px 0px #000; 
-            opacity: 0; 
-            animation: textFadeIn 2s ease forwards, pulse 1.5s infinite alternate 2s; 
-        }
-
-        @keyframes textFadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; text-shadow: 4px 4px 0px #000, 0 0 20px var(--pixel-green); }
-            100% { opacity: 0.5; text-shadow: 4px 4px 0px #000; }
-        }
-
-        /* --- 2. TRANG CHÍNH CỦA GAME (ẨN LÚC ĐẦU) --- */
-        #main-content {
-            display: none; /* Ẩn đi để nhường chỗ cho màn hình loading */
-            opacity: 0;
-            height: 100vh;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            transition: opacity 1s ease;
+            z-index: 50;
+            background-color: rgba(0, 0, 0, 0.75); /* Tối nền để nổi bật thanh load */
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        /* Khung Loading Bar */
+        .loading-box {
+            border: 4px solid #fff;
+            padding: 4px;
+            width: 300px;
+            background: #000;
+            box-shadow: 4px 4px 0 var(--kun-shadow);
+        }
+
+        /* Thanh nạp năng lượng */
+        .loading-bar {
+            height: 20px;
+            background-color: var(--kun-green);
+            width: 0%;
+            animation: fillBar 3s steps(15) forwards; /* Nạp giật cục kiểu 8-bit */
+        }
+
+        @keyframes fillBar {
+            0% { width: 0%; }
+            50% { width: 60%; }
+            80% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--kun-gold);
+            text-shadow: 2px 2px 0 var(--kun-shadow);
+            letter-spacing: 2px;
+        }
+
+        .blink {
+            animation: blinking 1s infinite;
+        }
+        @keyframes blinking { 50% { opacity: 0; } }
+
+        /* --- 2. TRANG CHÍNH CỦA GAME --- */
+        #main-content {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease;
         }
 
         #main-content.visible {
-            display: flex;
             opacity: 1;
+            visibility: visible;
         }
 
-        /* Tiêu đề Pixel Kun Master */
+        /* Khung Menu nổi lên */
+        .menu-board {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid var(--kun-gold);
+            padding: 40px;
+            text-align: center;
+            box-shadow: 
+                8px 8px 0 rgba(0,0,0,0.8),
+                inset 0 0 20px rgba(241, 196, 15, 0.2);
+            /* Hiệu ứng bay lơ lửng */
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         .pixel-title {
-            font-size: 4.5rem;
-            color: var(--pixel-green);
-            text-transform: uppercase;
-            margin: 0;
-            line-height: 1;
-            text-shadow: 4px 4px 0px #005500, 8px 8px 0px #002200; /* Đổ bóng khối 3D */
-            margin-bottom: 15px;
+            font-size: 3rem;
+            color: #fff;
+            margin: 0 0 10px 0;
+            text-shadow: 
+                4px 4px 0 var(--kun-green),
+                8px 8px 0 var(--kun-shadow);
+            line-height: 1.5;
         }
 
         .pixel-subtitle {
-            font-size: 1.2rem;
-            color: #fff;
-            background: #005500;
-            padding: 8px 20px;
+            font-size: 0.8rem;
+            color: var(--kun-gold);
             margin-bottom: 40px;
-            letter-spacing: 3px;
-            border: 2px solid var(--pixel-green);
+            letter-spacing: 1px;
         }
 
-        /* Nút Bắt đầu */
+        /* Nút Bắt đầu chuẩn Retro */
         .btn-start {
-            background: var(--pixel-green);
-            color: var(--pixel-black);
-            border: none;
-            padding: 15px 40px;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 1.5rem;
+            background-color: var(--kun-green);
+            color: #fff;
+            border: 4px solid #fff;
+            padding: 15px 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
             cursor: pointer;
-            box-shadow: 6px 6px 0 #005500;
-            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 8px 0 #1e8449; /* Đổ bóng tạo khối dày */
+            transition: all 0.1s;
         }
 
         .btn-start:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 8px 8px 0 #005500;
+            background-color: #27ae60;
+            transform: translateY(2px);
+            box-shadow: 0 6px 0 #1e8449;
         }
 
         .btn-start:active {
-            transform: translate(4px, 4px);
-            box-shadow: none;
+            transform: translateY(8px);
+            box-shadow: 0 0 0 #1e8449; /* Nhấn lún nút xuống */
+            background-color: var(--kun-gold);
+        }
+
+        /* Làm mờ nền khi vào main menu để nổi bật khung chữ */
+        .blur-bg {
+            filter: blur(4px) brightness(0.6);
         }
     </style>
 </head>
 <body>
 
-    <!-- Màn hình Loading bằng ảnh bối cảnh -->
+    <!-- Hình nền chung & Đường sọc CRT -->
+    <div class="bg-layer" id="game-bg"></div>
+    <div class="scanlines"></div>
+
+    <!-- Màn hình Loading -->
     <div id="loading-screen">
-        <div class="loading-overlay"></div>
-        <p class="loading-text-fade">ĐANG TẢI THẾ GIỚI KUN MASTER...</p>
+        <div class="loading-box">
+            <div class="loading-bar"></div>
+        </div>
+        <p class="loading-text">LOADING WORLD<span class="blink">...</span></p>
     </div>
 
-    <!-- Trang giới thiệu chính -->
+    <!-- Trang Menu Chính -->
     <div id="main-content">
-        <h1 class="pixel-title">PIXEL KUN MASTER</h1>
-        <p class="pixel-subtitle">CHUYẾN PHIÊU LƯU 8-BIT BẮT ĐẦU</p>
-        <button class="btn-start" onclick="alert('Tính năng đang phát triển!')">BẮT ĐẦU NGAY</button>
+        <div class="menu-board">
+            <h1 class="pixel-title">KUN<br>MASTER</h1>
+            <p class="pixel-subtitle">- THE PIXEL CRAWLER -</p>
+            <button class="btn-start" onclick="alert('Hệ thống đang khởi tạo...')">PRESS START</button>
+        </div>
     </div>
 
-    <!-- === PHẦN JAVASCRIPT GỘP CHUNG === -->
+    <!-- KỊCH BẢN JAVASCRIPT -->
     <script>
         window.addEventListener('load', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
+            const gameBg = document.getElementById('game-bg');
 
-            // Thời gian chờ để người chơi ngắm ảnh nền loading (3000 = 3 giây)
+            // Set thời gian chờ khớp với animation loading bar (3 giây)
             setTimeout(() => {
-                // Làm mờ dần màn hình loading
+                // 1. Ẩn màn hình loading
                 loadingScreen.style.opacity = '0';
                 
-                // Đợi làm mờ xong (khoảng 1 giây) thì ẩn hẳn đi và hiện trang chính
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    mainContent.classList.add('visible');
-                    document.body.style.overflow = 'auto'; // Cho phép cuộn trang trở lại
-                }, 1000); 
+                // 2. Làm mờ hình nền một chút để menu chính nổi bật hơn
+                gameBg.classList.add('blur-bg');
 
+                setTimeout(() => {
+                    loadingScreen.style.visibility = 'hidden';
+                    
+                    // 3. Hiện Menu chính
+                    mainContent.classList.add('visible');
+                    document.body.style.overflow = 'auto'; 
+                }, 1000); // Đợi 1 giây cho fade out xong
             }, 3000); 
         });
     </script>
