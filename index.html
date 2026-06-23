@@ -1,212 +1,282 @@
 <!DOCTYPE html>
-<html lang="vi" class="scroll-smooth">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Portfolio | Pro Version</title>
-    <!-- Tailwind CSS -->
+    <title>DevX | Advanced Smooth Portfolio</title>
+    
+    <!-- 1. Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
+    
+    <!-- 2. Font Awesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 3. Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
-                    colors: { primary: '#0ea5e9', secondary: '#10b981', dark: '#0f172a', darker: '#020617' }
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { primary: '#0ea5e9', secondary: '#10b981', dark: '#0b1120', darker: '#020617' }
                 }
             }
         }
     </script>
 
     <style>
-        /* Custom Animations */
-        .glass {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body { background-color: #020617; color: #d1d5db; overflow-x: hidden; }
+        /* Cần thiết cho Smooth Scroll của GSAP */
+        #smooth-wrapper { overflow: hidden; width: 100%; height: 100%; }
+        #smooth-content { overflow: visible; width: 100%; }
+        
+        .panel-grey { background-color: #0b1120; }
+        
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #0ea5e9, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .float-anim { animation: float 6s ease-in-out infinite; }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .typing-cursor { animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body class="bg-darker text-gray-300 font-sans antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+<body>
+
+<!-- Setup cấu trúc Smooth Scroll của GSAP -->
+<div id="smooth-wrapper">
+<div id="smooth-content">
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 glass transition-all duration-300 border-b border-gray-800">
+    <nav class="fixed w-full z-50 bg-dark/80 backdrop-blur-sm border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white tracking-wider">&lt;Dev<span class="text-primary">X</span>/&gt;</a>
-            <div class="hidden md:flex space-x-8">
-                <a href="#home" class="hover:text-primary transition font-medium">Trang chủ</a>
-                <a href="#skills" class="hover:text-primary transition font-medium">Kỹ năng</a>
-                <a href="#projects" class="hover:text-primary transition font-medium">Dự án</a>
-                <a href="#contact" class="hover:text-primary transition font-medium">Liên hệ</a>
+            <a href="#" class="text-2xl font-extrabold text-white tracking-wider">&lt;Dev<span class="text-primary">X</span>/&gt;</a>
+            <div class="flex space-x-6">
+                <a href="#hero" class="hover:text-primary transition font-medium">Top</a>
+                <a href="#about" class="hover:text-primary transition font-medium">Giới thiệu</a>
+                <a href="#work" class="hover:text-primary transition font-medium">Dự án</a>
             </div>
-            <button class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
-        <!-- Background Glow -->
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-[128px] opacity-20"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-[128px] opacity-20"></div>
-
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
-            <div>
-                <p class="text-primary font-mono text-lg mb-2">Xin chào, tôi là</p>
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
-                    Nguyễn Văn <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Dev</span>
-                </h1>
-                <h2 class="text-2xl md:text-3xl font-semibold mb-6 flex items-center">
-                    <span class="mr-2">I build</span>
-                    <span id="typed-text" class="text-secondary"></span>
-                    <span class="typing-cursor text-secondary">|</span>
-                </h2>
-                <p class="text-gray-400 mb-8 max-w-lg text-lg leading-relaxed">
-                    Chuyên gia phát triển ứng dụng Web và thiết kế hệ thống MMO tối ưu. Biến ý tưởng phức tạp thành những dòng code tinh gọn và giao diện mượt mà.
-                </p>
-                <div class="flex space-x-4">
-                    <a href="#projects" class="px-8 py-3 bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(14,165,233,0.5)] transition-all transform hover:-translate-y-1">Xem Dự Án</a>
-                    <a href="#contact" class="px-8 py-3 border border-gray-600 rounded-lg font-semibold hover:bg-gray-800 transition-all">Liên Hệ Ngay</a>
-                </div>
-            </div>
-            <div class="relative flex justify-center float-anim">
-                <!-- Chỗ này thay link ảnh của bạn vào src -->
-                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Coder" class="rounded-2xl shadow-2xl border border-gray-700 relative z-10 object-cover h-96 w-full max-w-sm">
-                <div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-2xl blur-xl opacity-30 -z-10"></div>
-            </div>
+    <!-- SECTION 1: HERO (Hiệu ứng thu nhỏ ảnh nền khi cuộn) -->
+    <section id="hero" class="h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Ảnh nền ghim cố định (will be pinned) -->
+        <div class="hero-bg absolute inset-0 z-0">
+            <!-- Thay link ảnh đẹp của bạn vào đây (nên dùng ảnh 4K) -->
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop" 
+                 alt="Background" class="w-full h-full object-cover opacity-30">
+        </div>
+        
+        <!-- Nội dung text lướt qua (Parallax speed: fast) -->
+        <div class="hero-content relative z-10 text-center px-6">
+            <h1 class="text-6xl md:text-8xl font-extrabold text-white leading-tight mb-4">
+                Xây dựng<br>Tương lai <span class="text-gradient">Số</span>
+            </h1>
+            <p class="text-2xl text-gray-400 font-light max-w-2xl mx-auto mb-10">
+                Tôi là một Coder chuyên nghiệp, biến ý tưởng thành các ứng dụng Web siêu mượt mà và liền mạch.
+            </p>
+            <a href="#work" class="px-10 py-4 bg-white text-darker rounded-full font-bold text-lg hover:scale-105 transition-transform inline-block">
+                Khám Phá Ngay <i class="fas fa-arrow-down ml-2"></i>
+            </a>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 bg-dark">
+    <!-- SECTION 2: ABOUT (Hiệu ứng Text Reveal & Lướt ngang) -->
+    <section id="about" class="py-32 panel-grey relative z-10">
         <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 text-center reveal">Vũ Khí <span class="text-primary">Công Nghệ</span></h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
-                <!-- Skill Card -->
-                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
-                    <i class="fab fa-js text-5xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform"></i>
-                    <h3 class="font-bold text-white text-lg">JavaScript</h3>
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <!-- Cột trái: Ảnh di chuyển Parallax ngược chiều -->
+                <div class="about-img-box relative overflow-hidden rounded-2xl aspect-square border-4 border-gray-700">
+                    <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=600&auto=format&fit=crop" 
+                         alt="Coding" class="about-image w-full h-full object-cover scale-110">
                 </div>
-                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
-                    <i class="fab fa-react text-5xl text-blue-400 mb-4 group-hover:scale-110 transition-transform"></i>
-                    <h3 class="font-bold text-white text-lg">ReactJS / Next</h3>
-                </div>
-                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
-                    <i class="fab fa-node text-5xl text-green-500 mb-4 group-hover:scale-110 transition-transform"></i>
-                    <h3 class="font-bold text-white text-lg">Node.js</h3>
-                </div>
-                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
-                    <i class="fas fa-database text-5xl text-gray-400 mb-4 group-hover:scale-110 transition-transform"></i>
-                    <h3 class="font-bold text-white text-lg">SQL / MongoDB</h3>
+                
+                <!-- Cột phải: Text xuất hiện từng dòng (ScrollReveal) -->
+                <div class="about-text-box">
+                    <p class="text-primary font-bold text-lg mb-2">// VỀ TÔI</p>
+                    <h2 class="text-5xl font-extrabold text-white mb-8 reveal-text">Đam mê sự hoàn hảo.</h2>
+                    <p class="text-xl text-gray-400 leading-relaxed mb-6 reveal-text">
+                        Với 5+ năm kinh nghiệm, tôi không chỉ viết code. Tôi tạo ra trải nghiệm người dùng. Mỗi khi bạn lướt xuống, đó là một câu chuyện được kể bằng sự chuyển động.
+                    </p>
+                    <p class="text-lg text-gray-500 reveal-text">
+                        Thế mạnh: React, Next.js, Node.js, GSAP (Advanced Animation), và tối ưu hệ thống MMO.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-20">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 text-center reveal">Dự Án <span class="text-secondary">Nổi Bật</span></h2>
-            <div class="grid md:grid-cols-3 gap-8 reveal">
-                <!-- Project 1 -->
-                <div class="glass rounded-xl overflow-hidden group">
-                    <div class="relative overflow-hidden h-48">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80" alt="Project 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg font-medium"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Hệ Thống Auto MMO</h3>
-                        <p class="text-sm text-gray-400 mb-4">Web app quản lý tác vụ tự động, tích hợp API thanh toán và hệ thống quản lý user.</p>
-                        <div class="flex flex-wrap gap-2 text-xs font-mono">
-                            <span class="bg-gray-800 text-primary px-2 py-1 rounded">Next.js</span>
-                            <span class="bg-gray-800 text-primary px-2 py-1 rounded">Tailwind</span>
+    <!-- SECTION 3: WORK (Dự án Lướt Ngang - Pinned & Horizontal Scroll) -->
+    <section id="work" class="bg-darker text-white h-screen flex items-center overflow-hidden relative">
+        <h2 class="absolute top-20 left-6 text-4xl font-extrabold z-20">Dự Án <span class="text-secondary">Nổi Bật</span></h2>
+        
+        <!-- Đây là container sẽ di chuyển ngang (Scrubbing) -->
+        <div class="work-container flex pl-6 space-x-10 relative z-10" style="width: 300vw;"> <!-- Chiều rộng gấp 3 lần màn hình -->
+            
+            <!-- Project Card 1 -->
+            <div class="work-card w-[80vw] h-[60vh] flex-shrink-0 glass rounded-2xl overflow-hidden group border border-gray-800 bg-gray-900/50">
+                <div class="w-full h-full grid grid-cols-2 gap-8 p-10">
+                    <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500" alt="MMO system" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500">
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-4xl font-bold mb-4">Hệ Thống MMO Auto</h3>
+                        <p class="text-gray-400 mb-6">Tích hợp API nâng cao, ghim và di chuyển các phần tử mượt mà khi người dùng tương tác.</p>
+                        <div class="flex space-x-2 text-xs font-mono">
+                            <span class="bg-gray-800 px-3 py-1 rounded">React</span><span class="bg-gray-800 px-3 py-1 rounded">API</span><span class="bg-gray-800 px-3 py-1 rounded">GSAP</span>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Thêm các project khác tương tự ở đây -->
-                
+            </div>
+
+            <!-- Project Card 2 -->
+            <div class="work-card w-[80vw] h-[60vh] flex-shrink-0 glass rounded-2xl overflow-hidden group border border-gray-800 bg-gray-900/50">
+                <div class="w-full h-full grid grid-cols-2 gap-8 p-10">
+                    <img src="https://images.unsplash.com/photo-1541976844346-f18aeac57b06?w=500" alt="E-commerce" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500">
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-4xl font-bold mb-4">E-com Platform Pro</h3>
+                        <p class="text-gray-400 mb-6">Giao diện lướt mượt mà như nhung, tối ưu tốc độ tải và trải nghiệm mua sắm.</p>
+                        <div class="flex space-x-2 text-xs font-mono">
+                            <span class="bg-gray-800 px-3 py-1 rounded">Next.js</span><span class="bg-gray-800 px-3 py-1 rounded">Tailwind</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Spacer để tạo cảm giác lướt đến cuối -->
+            <div class="w-[50vw] flex-shrink-0"></div>
+        </div>
+        
+        <!-- Nền ghim phía sau (Parallax Background) -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1510519133418-2f318858d1bf?w=1920')] opacity-5 bg-cover"></div>
+    </section>
+    
+    <!-- SECTION 4: INFINITE SCROLL TEXT (Hiệu ứng chữ chạy vô tận khi cuộn) -->
+    <section class="py-20 panel-grey border-t border-b border-gray-800 overflow-hidden">
+        <div class="marquee-wrapper flex space-x-10 text-9xl font-extrabold uppercase text-gray-800/50 tracking-tighter whitespace-nowrap">
+            <div class="marquee-text flex space-x-10">
+                <span>UI/UX</span> <span class="text-gradient">•</span> <span>GSAP</span> <span class="text-gradient">•</span> <span>TAILWIND</span> <span class="text-gradient">•</span> <span>SEAMLESS CHUYỂN ĐỘNG</span> <span class="text-gradient">•</span>
+            </div>
+            <div class="marquee-text flex space-x-10">
+                <span>UI/UX</span> <span class="text-gradient">•</span> <span>GSAP</span> <span class="text-gradient">•</span> <span>TAILWIND</span> <span class="text-gradient">•</span> <span>SEAMLESS CHUYỂN ĐỘNG</span> <span class="text-gradient">•</span>
             </div>
         </div>
     </section>
 
-    <!-- Footer / Contact -->
-    <footer id="contact" class="bg-dark py-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-6 text-center reveal">
-            <h2 class="text-3xl font-bold text-white mb-6">Kết Nối Với Tôi</h2>
-            <p class="text-gray-400 mb-8 max-w-md mx-auto">Đang tìm kiếm một Developer cho dự án tiếp theo của bạn? Đừng ngần ngại liên hệ.</p>
-            <div class="flex justify-center space-x-6 mb-8">
-                <a href="#" class="text-gray-400 hover:text-blue-500 text-3xl transition-colors transform hover:scale-110"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white text-3xl transition-colors transform hover:scale-110"><i class="fab fa-github"></i></a>
-                <a href="#" class="text-gray-400 hover:text-blue-400 text-3xl transition-colors transform hover:scale-110"><i class="fab fa-telegram"></i></a>
-            </div>
-            <p class="text-gray-600 text-sm">© 2026 DevX Portfolio. Xây dựng với HTML, Tailwind CSS & JS.</p>
-        </div>
+    <!-- Footer -->
+    <footer class="py-16 text-center bg-darker border-t border-gray-800 relative z-10">
+        <h3 class="text-3xl font-bold text-white mb-6">Dev<span class="text-primary">X</span> Portfolio</h3>
+        <p class="text-gray-600">© 2026. Một thiết kế cao cấp không biết bạn có thích không? ;)</p>
     </footer>
 
-    <!-- JavaScript Interactions -->
-    <script>
-        // Typing Effect
-        const textArray = ["Web Apps", "MMO Systems", "Landing Pages", "APIs"];
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typedTextSpan = document.getElementById("typed-text");
+</div> <!-- End smooth-content -->
+</div> <!-- End smooth-wrapper -->
 
-        function type() {
-            const currentText = textArray[textIndex];
-            if (isDeleting) {
-                typedTextSpan.textContent = currentText.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typedTextSpan.textContent = currentText.substring(0, charIndex + 1);
-                charIndex++;
-            }
+<!-- 4. JS LIBRARIES -->
+<!-- GSAP Core -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- GSAP ScrollTrigger Plugin (Quan trọng nhất) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- GSAP ScrollSmoother (Để cuộn trang mượt hơn nữa - Bản free) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
-            let typeSpeed = isDeleting ? 50 : 100;
 
-            if (!isDeleting && charIndex === currentText.length) {
-                typeSpeed = 2000; // Pause at end
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % textArray.length;
-                typeSpeed = 500; // Pause before typing next
-            }
-            setTimeout(type, typeSpeed);
+<!-- 5. KỊCH BẢN CHUYỂN ĐỘNG (NÂNG CAO) -->
+<script>
+    // Đăng ký plugins
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Bật hiệu ứng mượt khi cuộn trang (khử giật chuột)
+    // Lưu ý: Bản free này làm mượt dựa trên trình duyệt, không mạnh như ScrollSmoother trả phí nhưng cũng rất ổn.
+    if (!('ontouchstart' in window)) { // Chỉ bật trên Desktop
+        gsap.config({ nullTargetWarn: false, trialWarn: false });
+    }
+
+    // --- HOẠT CẢNH ---
+
+    // 1. HERO: Khi cuộn xuống, ảnh nền thu nhỏ lại, text mờ dần và bay lên
+    const tlHero = gsap.timeline({
+        scrollTrigger: {
+            trigger: "#hero",
+            start: "top top", // Bắt đầu khi section top chạm top màn hình
+            end: "bottom top", // Kết thúc khi section bottom chạm top màn hình
+            scrub: true, // Chuyển động liên mạch theo chuột
+            pin: true, // Ghim section Hero lại
         }
-        document.addEventListener("DOMContentLoaded", function() { setTimeout(type, 1000); });
+    });
+    
+    tlHero.to(".hero-bg img", { scale: 1.5, opacity: 0.1 }, 0)
+          .to(".hero-content", { y: -150, opacity: 0 }, 0);
 
-        // Scroll Reveal Animation
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
+
+    // 2. ABOUT: Hiệu ứng Parallax cho ảnh và Reveal text từng dòng
+    // Ảnh cột trái di chuyển chậm hơn text cột phải
+    gsap.to(".about-image", {
+        yPercent: -20, // Di chuyển ngược lên 20%
+        ease: "none",
+        scrollTrigger: {
+            trigger: "#about",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1, // '1' là độ mượt, càng lớn càng mượt
         }
-        window.addEventListener("scroll", reveal);
-        reveal(); // Trigger once on load
-    </script>
+    });
+    
+    // Text Reveal (hiện từng dòng)
+    gsap.utils.toArray(".reveal-text").forEach(text => {
+        gsap.from(text, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            scrollTrigger: {
+                trigger: text,
+                start: "top 85%", // Hiện khi dòng text chạm 85% chiều cao màn hình
+                toggleActions: "play none none reverse", // Lướt ngược lên thì ẩn lại
+            }
+        });
+    });
+
+
+    // 3. WORK (Ghim & Lướt Ngang): Đây là phần "khó" và "đẹp" nhất
+    const workSection = document.querySelector("#work");
+    const workContainer = document.querySelector(".work-container");
+    
+    // Tính toán khoảng cách cần lướt ngang
+    let getRatio = () => window.innerWidth / workContainer.offsetWidth;
+    let scrollWidth = workContainer.offsetWidth - window.innerWidth;
+
+    gsap.to(workContainer, {
+        x: -scrollWidth, // Di chuyển ngang sang trái
+        ease: "none",
+        scrollTrigger: {
+            trigger: "#work",
+            pin: true, // Ghim section lại để lướt ngang
+            scrub: 1, // Lướt ngang liền mạch theo chuột
+            start: "top top",
+            end: () => "+=" + scrollWidth, // Khoảng thời gian ghim bằng khoảng cách lướt
+            invalidateOnRefresh: true, // Cập nhật lại khi resize màn hình
+        }
+    });
+
+
+    // 4. MARQUEE: Chữ chạy vô tận và tăng tốc khi cuộn nhanh
+    let marqueeTl = gsap.timeline({
+        repeat: -1,
+        defaults: { ease: "none", duration: 20 }
+    }).to(".marquee-text", { xPercent: -100 });
+    
+    // ScrollTrigger để tăng tốc marquee khi cuộn
+    ScrollTrigger.create({
+        trigger: ".marquee-wrapper",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0.5,
+        onUpdate: (self) => {
+            marqueeTl.timeScale(self.getVelocity() * 0.005 + 1); // Tốc độ chạy = 1 + (tốc độ cuộn * hệ số)
+        }
+    });
+
+</script>
 </body>
 </html>
