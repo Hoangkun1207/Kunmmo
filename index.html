@@ -1,263 +1,212 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Kun Master - The Awakening</title>
+    <title>Dev Portfolio | Pro Version</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Nhúng Font Pixel chuẩn từ Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
+                    colors: { primary: '#0ea5e9', secondary: '#10b981', dark: '#0f172a', darker: '#020617' }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* === TÀI NGUYÊN MÀU SẮC & BIẾN === */
-        :root {
-            --kun-green: #2ecc71; 
-            --kun-dark: #1a1a1a;
-            --kun-gold: #f1c40f;
-            --kun-shadow: #000000;
+        /* Custom Animations */
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--kun-dark);
-            color: #fff;
-            font-family: 'Press Start 2P', cursive;
-            overflow: hidden; 
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
-
-        /* Hiệu ứng màn hình Tivi CRT sọc ngang */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            z-index: 100;
-            pointer-events: none; 
-        }
-
-        /* --- HÌNH NỀN TỐI ƯU CHO MÁY TÍNH & ĐIỆN THOẠI --- */
-        .bg-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            
-            /* LINK ẢNH MỚI CỦA BẠN NẰM Ở ĐÂY: */
-            background-image: url('https://img.itch.zone/aW1nLzEzNzc2MTcxLnBuZw==/original/RzWuJa.png'); 
-            
-            /* Phủ kín màn hình, luôn giữ tâm ảnh ở giữa */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            
-            /* LƯU Ý QUAN TRỌNG: Ép pixelate để ảnh nét căng không bị mờ */
-            image-rendering: pixelated; 
-            image-rendering: crisp-edges;
-            
-            z-index: -1;
-            transition: filter 1.5s ease;
-        }
-
-        /* --- 1. MÀN HÌNH LOADING --- */
-        #loading-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            background-color: rgba(0, 0, 0, 0.6); 
-            transition: opacity 1s ease, visibility 1s;
-        }
-
-        .loading-box {
-            border: 4px solid #fff;
-            padding: 4px;
-            width: 300px; 
-            max-width: 80%; 
-            background: #000;
-            box-shadow: 4px 4px 0 var(--kun-shadow);
-        }
-
-        .loading-bar {
-            height: 20px;
-            background-color: var(--kun-green);
-            width: 0%;
-            animation: fillBar 3s steps(15) forwards; 
-        }
-
-        @keyframes fillBar {
-            0% { width: 0%; }
-            50% { width: 60%; }
-            80% { width: 80%; }
-            100% { width: 100%; }
-        }
-
-        .loading-text {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: var(--kun-gold);
-            text-shadow: 2px 2px 0 var(--kun-shadow);
-            letter-spacing: 2px;
-            text-align: center;
-        }
-
-        .blink {
-            animation: blinking 1s infinite;
-        }
-        @keyframes blinking { 50% { opacity: 0; } }
-
-        /* --- 2. TRANG CHÍNH CỦA GAME --- */
-        #main-content {
-            position: relative;
-            z-index: 10;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1.5s ease;
-        }
-
-        #main-content.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .menu-board {
-            background: rgba(0, 0, 0, 0.85);
-            border: 4px solid var(--kun-gold);
-            padding: 40px;
-            text-align: center;
-            box-shadow: 
-                8px 8px 0 rgba(0,0,0,0.9),
-                inset 0 0 20px rgba(241, 196, 15, 0.2);
-            animation: floating 3s ease-in-out infinite;
-            width: 80%;
-            max-width: 500px; 
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .pixel-title {
-            font-size: 3.5rem;
-            color: #fff;
-            margin: 0 0 15px 0;
-            text-shadow: 
-                4px 4px 0 var(--kun-green),
-                8px 8px 0 var(--kun-shadow);
-            line-height: 1.2;
-        }
-
-        .pixel-subtitle {
-            font-size: 0.8rem;
-            color: var(--kun-gold);
-            margin-bottom: 40px;
-            letter-spacing: 1px;
-            line-height: 1.5;
-        }
-
-        .btn-start {
-            background-color: var(--kun-green);
-            color: #fff;
-            border: 4px solid #fff;
-            padding: 15px 30px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 8px 0 #1e8449; 
-            transition: all 0.1s;
-        }
-
-        .btn-start:hover {
-            background-color: #27ae60;
-            transform: translateY(2px);
-            box-shadow: 0 6px 0 #1e8449;
-        }
-
-        .btn-start:active {
-            transform: translateY(8px);
-            box-shadow: 0 0 0 #1e8449; 
-            background-color: var(--kun-gold);
-        }
-
-        .blur-bg {
-            filter: blur(5px) brightness(0.5); 
-        }
-
-        /* --- TỐI ƯU HÓA CHO ĐIỆN THOẠI (MOBILE RESPONSIVE) --- */
-        @media (max-width: 768px) {
-            .menu-board {
-                padding: 25px 15px;
-                width: 85%;
-            }
-            .pixel-title {
-                font-size: 2.2rem; 
-                text-shadow: 
-                    3px 3px 0 var(--kun-green),
-                    6px 6px 0 var(--kun-shadow);
-            }
-            .pixel-subtitle {
-                font-size: 0.6rem;
-                margin-bottom: 30px;
-            }
-            .btn-start {
-                padding: 12px 20px;
-                font-size: 0.8rem;
-            }
-            .loading-text {
-                font-size: 0.6rem;
-            }
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .typing-cursor { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body>
+<body class="bg-darker text-gray-300 font-sans antialiased overflow-x-hidden selection:bg-primary selection:text-white">
 
-    <!-- Hình nền chung & Đường sọc CRT -->
-    <div class="bg-layer" id="game-bg"></div>
-    <div class="scanlines"></div>
-
-    <!-- Màn hình Loading -->
-    <div id="loading-screen">
-        <div class="loading-box">
-            <div class="loading-bar"></div>
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white tracking-wider">&lt;Dev<span class="text-primary">X</span>/&gt;</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-primary transition font-medium">Trang chủ</a>
+                <a href="#skills" class="hover:text-primary transition font-medium">Kỹ năng</a>
+                <a href="#projects" class="hover:text-primary transition font-medium">Dự án</a>
+                <a href="#contact" class="hover:text-primary transition font-medium">Liên hệ</a>
+            </div>
+            <button class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
         </div>
-        <p class="loading-text">LOADING THE WORLD<span class="blink">...</span></p>
-    </div>
+    </nav>
 
-    <!-- Trang Menu Chính -->
-    <div id="main-content">
-        <div class="menu-board">
-            <h1 class="pixel-title">KUN<br>MASTER</h1>
-            <p class="pixel-subtitle">- NEW ADVENTURE -</p>
-            <button class="btn-start" onclick="alert('Đang kết nối vào máy chủ...')">PRESS START</button>
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
+        <!-- Background Glow -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-[128px] opacity-20"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-[128px] opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+                <p class="text-primary font-mono text-lg mb-2">Xin chào, tôi là</p>
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+                    Nguyễn Văn <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Dev</span>
+                </h1>
+                <h2 class="text-2xl md:text-3xl font-semibold mb-6 flex items-center">
+                    <span class="mr-2">I build</span>
+                    <span id="typed-text" class="text-secondary"></span>
+                    <span class="typing-cursor text-secondary">|</span>
+                </h2>
+                <p class="text-gray-400 mb-8 max-w-lg text-lg leading-relaxed">
+                    Chuyên gia phát triển ứng dụng Web và thiết kế hệ thống MMO tối ưu. Biến ý tưởng phức tạp thành những dòng code tinh gọn và giao diện mượt mà.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#projects" class="px-8 py-3 bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg font-semibold hover:shadow-[0_0_20px_rgba(14,165,233,0.5)] transition-all transform hover:-translate-y-1">Xem Dự Án</a>
+                    <a href="#contact" class="px-8 py-3 border border-gray-600 rounded-lg font-semibold hover:bg-gray-800 transition-all">Liên Hệ Ngay</a>
+                </div>
+            </div>
+            <div class="relative flex justify-center float-anim">
+                <!-- Chỗ này thay link ảnh của bạn vào src -->
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Coder" class="rounded-2xl shadow-2xl border border-gray-700 relative z-10 object-cover h-96 w-full max-w-sm">
+                <div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-2xl blur-xl opacity-30 -z-10"></div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- KỊCH BẢN JAVASCRIPT -->
-    <script>
-        window.addEventListener('load', () => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const mainContent = document.getElementById('main-content');
-            const gameBg = document.getElementById('game-bg');
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 text-center reveal">Vũ Khí <span class="text-primary">Công Nghệ</span></h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+                <!-- Skill Card -->
+                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
+                    <i class="fab fa-js text-5xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-bold text-white text-lg">JavaScript</h3>
+                </div>
+                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
+                    <i class="fab fa-react text-5xl text-blue-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-bold text-white text-lg">ReactJS / Next</h3>
+                </div>
+                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
+                    <i class="fab fa-node text-5xl text-green-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-bold text-white text-lg">Node.js</h3>
+                </div>
+                <div class="glass p-6 rounded-xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-pointer">
+                    <i class="fas fa-database text-5xl text-gray-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-bold text-white text-lg">SQL / MongoDB</h3>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
+    <!-- Projects Section -->
+    <section id="projects" class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 text-center reveal">Dự Án <span class="text-secondary">Nổi Bật</span></h2>
+            <div class="grid md:grid-cols-3 gap-8 reveal">
+                <!-- Project 1 -->
+                <div class="glass rounded-xl overflow-hidden group">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80" alt="Project 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg font-medium"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Hệ Thống Auto MMO</h3>
+                        <p class="text-sm text-gray-400 mb-4">Web app quản lý tác vụ tự động, tích hợp API thanh toán và hệ thống quản lý user.</p>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono">
+                            <span class="bg-gray-800 text-primary px-2 py-1 rounded">Next.js</span>
+                            <span class="bg-gray-800 text-primary px-2 py-1 rounded">Tailwind</span>
+                        </div>
+                    </div>
+                </div>
                 
-                gameBg.classList.add('blur-bg');
+                <!-- Thêm các project khác tương tự ở đây -->
+                
+            </div>
+        </div>
+    </section>
 
-                setTimeout(() => {
-                    loadingScreen.style.visibility = 'hidden';
-                    mainContent.classList.add('visible');
-                    document.body.style.overflow = 'auto'; 
-                }, 1000); 
-            }, 3000); 
-        });
+    <!-- Footer / Contact -->
+    <footer id="contact" class="bg-dark py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 text-center reveal">
+            <h2 class="text-3xl font-bold text-white mb-6">Kết Nối Với Tôi</h2>
+            <p class="text-gray-400 mb-8 max-w-md mx-auto">Đang tìm kiếm một Developer cho dự án tiếp theo của bạn? Đừng ngần ngại liên hệ.</p>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="text-gray-400 hover:text-blue-500 text-3xl transition-colors transform hover:scale-110"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white text-3xl transition-colors transform hover:scale-110"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-gray-400 hover:text-blue-400 text-3xl transition-colors transform hover:scale-110"><i class="fab fa-telegram"></i></a>
+            </div>
+            <p class="text-gray-600 text-sm">© 2026 DevX Portfolio. Xây dựng với HTML, Tailwind CSS & JS.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactions -->
+    <script>
+        // Typing Effect
+        const textArray = ["Web Apps", "MMO Systems", "Landing Pages", "APIs"];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typedTextSpan = document.getElementById("typed-text");
+
+        function type() {
+            const currentText = textArray[textIndex];
+            if (isDeleting) {
+                typedTextSpan.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedTextSpan.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % textArray.length;
+                typeSpeed = 500; // Pause before typing next
+            }
+            setTimeout(type, typeSpeed);
+        }
+        document.addEventListener("DOMContentLoaded", function() { setTimeout(type, 1000); });
+
+        // Scroll Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Trigger once on load
     </script>
 </body>
 </html>
